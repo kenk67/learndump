@@ -1,0 +1,99 @@
+# Create profile if it doesn't exist
+if (!(Test-Path $PROFILE.CurrentUserCurrentHost)) {
+    New-Item -ItemType File -Path $PROFILE.CurrentUserCurrentHost -Force
+}
+
+# PSReadLine settings
+Set-PSReadLineOption -EditMode Windows
+Set-PSReadLineOption -HistoryNoDuplicates $true
+Set-PSReadLineOption -MaximumHistoryCount 1000
+
+# Custom prompt function
+function Prompt {
+    # Get the current Python conda environment name
+    $condaEnv = if ($env:CONDA_DEFAULT_ENV) { "($env:CONDA_DEFAULT_ENV) " } else { "" }
+    
+    # Get the current working directory
+    $cwd = Get-Location
+
+    # Get the current git branch
+    $branch = ""
+    try {
+        $branchName = git rev-parse --abbrev-ref HEAD 2>$null
+        if ($LASTEXITCODE -eq 0) {
+            $branch = " git <$branchName>"
+        }
+    } catch {}
+
+    # Construct the prompt
+    "$condaEnv$cwd$branch > "
+}
+
+
+
+new
+
+Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
+Set-PSReadlineKeyHandler -Key UpArrow -Function HistorySearchBackward
+
+Set-PSReadlineKeyHandler -Key DownArrow -Function HistorySearchForward
+
+
+HistorySearchCursorMovesToEnd ??
+----------------------------------
+Profile creation                 #
+----------------------------------
+$testepath = "$HOME\Documents\"
+cd $testpath
+
+
+$filepath = "$HOME\Documents\PowerShell\Microsoft.VSCode_profile.ps1"
+New-Item -ItemType File -Path $filepath -Force
+
+
+FINAL-------------
+
+$PSReadLineOptions = @{
+    AddToHistoryHandler =  "MemoryAndFile"
+    HistoryNoDuplicates = $true
+    HistorySearchCursorMovesToEnd = $true
+    MaximumHistoryCount = 2000
+    PredictionSource = "HistoryAndPlugin"
+    PredictionViewStyle = "ListView"
+}
+Set-PSReadLineOption @PSReadLineOptions
+
+Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
+Set-PSReadlineKeyHandler -Key UpArrow -Function HistorySearchBackward
+Set-PSReadlineKeyHandler -Key DownArrow -Function HistorySearchForward
+
+function Prompt {
+    # Get the current Python conda environment name
+    $condaEnv = if ($env:CONDA_DEFAULT_ENV) { "($env:CONDA_DEFAULT_ENV) " } else { "" }
+    
+    # Get the current working directory
+    $cwd = (Get-Location).Path
+
+    # Get the current git branch
+    $branch = ""
+    try {
+        $branchName = git rev-parse --abbrev-ref HEAD 2>$null
+        if ($LASTEXITCODE -eq 0) {
+            $branch = " git <$branchName>"
+        }
+    } catch {
+        $branch = ""
+    }
+
+    # Construct the prompt
+    "`n$condaEnv$cwd$branch >`n"
+}
+
+
+
+
+
+
+
+
+
