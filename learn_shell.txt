@@ -62,7 +62,7 @@ $PSReadLineOptions = @{
     PredictionViewStyle = "ListView"
 }
 Set-PSReadLineOption @PSReadLineOptions
-
+ 
 Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
 Set-PSReadlineKeyHandler -Key UpArrow -Function HistorySearchBackward
 Set-PSReadlineKeyHandler -Key DownArrow -Function HistorySearchForward
@@ -90,10 +90,4 @@ function Prompt {
 }
 
 
-
-
-
-
-
-
-
+Adding a test sentence
